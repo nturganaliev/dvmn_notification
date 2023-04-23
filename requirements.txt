@@ -1,0 +1,4 @@
+asyncio==3.4.3
+environs==9.5.0
+python-telegram-bot==20.2
+requests==2.28.2
