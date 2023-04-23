@@ -46,6 +46,7 @@ async def main():
                         chat_id=telegram_channel_id, 
                         text=text
                     )
+            pprint(content)
         except requests.exceptions.ReadTimeout as error:
             print(error)
         except requests.exceptions.ConnectionError as error:
