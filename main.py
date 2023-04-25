@@ -15,7 +15,7 @@ async def main():
     token_telegram_bot = env('TOKEN_TELEGRAM_BOT')
     try:
         telegram_bot = telegram.Bot(token=token_telegram_bot)
-    except telegram.
+    
     telegram_channel_id = env('TELEGRAM_CHANNEL')
 
     token_dvmn = env('TOKEN_DVMN')
@@ -46,11 +46,14 @@ async def main():
                         chat_id=telegram_channel_id, 
                         text=text
                     )
-            pprint(content)
         except requests.exceptions.ReadTimeout as error:
             print(error)
         except requests.exceptions.ConnectionError as error:
             print(error)
+        except telegram.error.BadRequest as bad_request:
+            print(bad_request)
+        except telegram.error.Unauthorized as unauthorized:
+            print(f"{unauthorized}, check your TELEGRAM_BOT_TOKEN")
 
 
 if __name__ == '__main__':
