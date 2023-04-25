@@ -1,6 +1,7 @@
 import asyncio
 import requests
 import telegram
+import time
 
 from environs import Env
 from pprint import pprint
@@ -12,33 +13,34 @@ async def main():
     env = Env()
     env.read_env()
 
-    token_telegram_bot = env('TOKEN_TELEGRAM_BOT')
+    telegram_bot_token = env('TELEGRAM_BOT_TOKEN')
     try:
-        telegram_bot = telegram.Bot(token=token_telegram_bot)
-    
+        telegram_bot = telegram.Bot(token=telegram_bot_token)
+    except telegram.error.BadRequest as bad_request:
+        print(bad_request)
+
     telegram_channel_id = env('TELEGRAM_CHANNEL')
 
-    token_dvmn = env('TOKEN_DVMN')
-    headers = {'Authorization': f'Token {token_dvmn}'}
+    dvmn_token = env('DVMN_TOKEN')
+    headers = {'Authorization': f'Token {dvmn_token}'}
+    timestamp = ''
+    params = {'timestamp': timestamp}
 
     while True:
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, params=params, headers=headers)
             response.raise_for_status()
-            content = response.json()
-            if content['status'] == 'timeout':
-                timestamp = content['timestamp_to_request']
-                params = {'timestamp': timestamp}
-                response = requests.get(
-                   url, params=params, headers=headers
+            task_status_content = response.json()
+            if task_status_content['status'] == 'timeout':
+                timestamp = task_status_content['timestamp_to_request']
+            if not task_status_content['status'] == 'timeout':
+                lesson_title = (
+                    task_status_content['new_attempts'][0]['lesson_title']
                 )
-                content = response.json()
-            if not content['status'] == 'timeout':
-                lesson_title = content['new_attempts'][0]['lesson_title']
                 text = f'У вас проверили работу <<{lesson_title}>>\n'\
                        f'Преподавателю все понарвилось, можно приступить к '\
                        f'следующему уроку!'
-                if content['new_attempts'][0]['is_negative']:
+                if task_status_content['new_attempts'][0]['is_negative']:
                     text = f'У вас проверили работу <<{lesson_title}>>\n'\
                            f'К сожалению, в работе есть ошибки.'
                 async with telegram_bot:
@@ -46,14 +48,12 @@ async def main():
                         chat_id=telegram_channel_id, 
                         text=text
                     )
-        except requests.exceptions.ReadTimeout as error:
-            print(error)
         except requests.exceptions.ConnectionError as error:
             print(error)
+            time.sleep(180)
         except telegram.error.BadRequest as bad_request:
             print(bad_request)
-        except telegram.error.Unauthorized as unauthorized:
-            print(f"{unauthorized}, check your TELEGRAM_BOT_TOKEN")
+
 
 
 if __name__ == '__main__':
