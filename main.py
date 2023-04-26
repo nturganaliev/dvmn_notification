@@ -14,10 +14,7 @@ async def main():
     env.read_env()
 
     telegram_bot_token = env('TELEGRAM_BOT_TOKEN')
-    try:
-        telegram_bot = telegram.Bot(token=telegram_bot_token)
-    except telegram.error.BadRequest as bad_request:
-        print(bad_request)
+    telegram_bot = telegram.Bot(token=telegram_bot_token)
 
     telegram_channel_id = env('TELEGRAM_CHANNEL')
 
@@ -28,7 +25,7 @@ async def main():
 
     while True:
         try:
-            response = requests.get(url, params=params, headers=headers)
+            response = requests.get(url, params=params, headers=headers, timeout=3)
             response.raise_for_status()
             task_status_content = response.json()
             if task_status_content['status'] == 'timeout':
@@ -48,12 +45,11 @@ async def main():
                         chat_id=telegram_channel_id, 
                         text=text
                     )
+        except requests.exceptions.ReadTimeout as error:
+            pass
         except requests.exceptions.ConnectionError as error:
             print(error)
             time.sleep(180)
-        except telegram.error.BadRequest as bad_request:
-            print(bad_request)
-
 
 
 if __name__ == '__main__':
