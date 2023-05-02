@@ -25,7 +25,7 @@ async def main():
 
     while True:
         try:
-            response = requests.get(url, params=params, headers=headers, timeout=3)
+            response = requests.get(url, params=params, headers=headers)
             response.raise_for_status()
             task_status_content = response.json()
             if task_status_content['status'] == 'timeout':
