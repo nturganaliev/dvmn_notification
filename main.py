@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import requests
 import telegram
@@ -62,15 +61,14 @@ def main():
                     text = f'У вас проверили работу <<{lesson_title}>>\n'\
                            f'К сожалению, в работе есть ошибки.'
                 telegram_bot.send_message(
-                    chat_id=telegram_channel_id, 
+                    chat_id=telegram_channel_id,
                     text=text
                 )
-        except requests.exceptions.ReadTimeout as error:
+        except requests.exceptions.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError as error:
             logger.error(error)
             time.sleep(180)
-
 
 
 if __name__ == '__main__':
