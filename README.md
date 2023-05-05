@@ -18,6 +18,19 @@
 - `TOKEN_TELEGRAM_BOT` — токен телеграм бота. Подробно можно прочитать [здесь](https://sendpulse.com/ru/knowledge-base/chatbot/telegram/create-telegram-chatbot#:~:text=%D0%9F%D0%B5%D1%80%D0%B5%D0%B9%D0%B4%D0%B8%D1%82%D0%B5%20%D0%BA%20%D0%B1%D0%BE%D1%82%D1%83%20%40BotFather%20%D0%B8,%D0%92%D1%8B%D0%B1%D0%B5%D1%80%D0%B8%D1%82%D0%B5%20%D0%B1%D0%BE%D1%82%D0%B0%2C%20%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D0%BE%D0%B3%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%BE%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B8%D1%82%D1%8C.)
 - `TELEGRAM_CHANNEL` — id вашего телеграм канала, куда телеграм бот будет отправлять уведомление.
 
+## Запуск в контейнере докер
+Для запуска данного скрипта внутри докер конейнера надо:
+- Установить докер, для подробной информации об установке, как работать образами, контейнерами смотрите на [официальном сайте](https://docs.docker.com)
+- Запустите Dockerfile командой в корневой папке со скриптом:
+```bash
+docker build -t dvmn_notification .
+
+```
+
+- Запустите docker image командой:
+```bash
+docker run -d --restart=always dvmn_notification
+```
 
 ## Цели проекта
 
