@@ -6,7 +6,8 @@ RUN apt install python3-pip -y
 
 WORKDIR /opt/dvmn_notifications
 
-COPY . ./
+COPY main.py ./
+COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 

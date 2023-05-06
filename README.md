@@ -29,7 +29,7 @@ docker build -t dvmn_notification .
 
 - Запустите docker image командой:
 ```bash
-docker run -d --restart=always dvmn_notification
+docker run -d --restart=always --env-file=path_to_env_file dvmn_notification
 ```
 
 ## Цели проекта
