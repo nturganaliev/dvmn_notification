@@ -28,6 +28,10 @@ def send_request_to_dvmn(dvmn_token, timestamp):
 
 
 def main():
+    logging.basicConfig(format="%(process)d %(levelname)s %(message)s")
+    logger = logging.getLogger('Logger')
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(telegram_bot, telegram_channel_id))
 
     env = Env()
     env.read_env()
@@ -39,10 +43,6 @@ def main():
     telegram_bot = telegram.Bot(token=telegram_bot_token)
     telegram_channel_id = env('TELEGRAM_CHANNEL')
 
-    logging.basicConfig(format="%(process)d %(levelname)s %(message)s")
-    logger = logging.getLogger('Logger')
-    logger.setLevel(logging.INFO)
-    logger.addHandler(TelegramLogsHandler(telegram_bot, telegram_channel_id))
 
     logger.info('Bot is started...')
     while True:
