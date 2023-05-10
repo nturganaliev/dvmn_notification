@@ -6,6 +6,9 @@ import time
 from environs import Env
 
 
+logger = logging.getLogger(__file__)
+
+
 class TelegramLogsHandler(logging.Handler):
 
     def __init__(self, tg_bot, chat_id):
@@ -28,11 +31,6 @@ def send_request_to_dvmn(dvmn_token, timestamp):
 
 
 def main():
-    logging.basicConfig(format="%(process)d %(levelname)s %(message)s")
-    logger = logging.getLogger('Logger')
-    logger.setLevel(logging.INFO)
-    logger.addHandler(TelegramLogsHandler(telegram_bot, telegram_channel_id))
-
     env = Env()
     env.read_env()
 
@@ -40,9 +38,12 @@ def main():
     dvmn_token = env('DVMN_TOKEN')
 
     telegram_bot_token = env('TELEGRAM_BOT_TOKEN')
-    telegram_bot = telegram.Bot(token=telegram_bot_token)
     telegram_channel_id = env('TELEGRAM_CHANNEL')
+    telegram_bot = telegram.Bot(token=telegram_bot_token)
 
+    logging.basicConfig(format="%(process)d %(levelname)s %(message)s")
+    logger.setLevel(logging.INFO)
+    logger.addHandler(TelegramLogsHandler(telegram_bot, telegram_channel_id))
 
     logger.info('Bot is started...')
     while True:
